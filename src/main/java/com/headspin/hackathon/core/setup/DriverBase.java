@@ -3,6 +3,7 @@ package com.headspin.hackathon.core.setup;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Base64;
 
@@ -58,28 +59,30 @@ public class DriverBase {
 
 	@AfterMethod(alwaysRun = true)
 	public void afterMethod(ITestResult failingTest) {
-		try {
-			WebDriver driver = driverThread.get();
-			String screenshotDirectory = System.getProperty("screenshotDirectory", "target/screenshots");
-			String screenshotAbsolutePath = screenshotDirectory + File.separator + System.currentTimeMillis() + "_"
-					+ failingTest.getName() + ".png";
-			File screenshot = new File(screenshotAbsolutePath);
-			if (createFile(screenshot)) {
-				try {
-					writeScreenshotToFile(driver, screenshot);
-				} catch (ClassCastException weNeedToAugmentOurDriverObject) {
-					writeScreenshotToFile(new Augmenter().augment(driver), screenshot);
+		if (!failingTest.isSuccess()) {
+			try {
+				WebDriver driver = driverThread.get();
+				String screenshotDirectory = System.getProperty("screenshotDirectory", "target/screenshots");
+				String screenshotAbsolutePath = screenshotDirectory + File.separator + System.currentTimeMillis() + "_"
+						+ failingTest.getName() + ".png";
+				File screenshot = new File(screenshotAbsolutePath);
+				if (createFile(screenshot)) {
+					try {
+						writeScreenshotToFile(driver, screenshot);
+					} catch (ClassCastException weNeedToAugmentOurDriverObject) {
+						writeScreenshotToFile(new Augmenter().augment(driver), screenshot);
+					}
+					byte[] failedAt = Base64.getEncoder().encode(FileUtils.readFileToByteArray(screenshot));
+					String base64String = new String(failedAt);
+					ListenerThreads.getChildTest().fail("<b>Screenshot</b><br> ",
+							MediaEntityBuilder.createScreenCaptureFromBase64String(base64String).build());
+				} else {
+					System.err.println("Unable to create " + screenshotAbsolutePath);
 				}
-				byte[] failedAt = Base64.getEncoder().encode(FileUtils.readFileToByteArray(screenshot));
-				String base64String = new String(failedAt);
-				ListenerThreads.getChildTest().fail("<b>Screenshot</b><br> ",
-						MediaEntityBuilder.createScreenCaptureFromBase64String(base64String).build());
-			} else {
-				System.err.println("Unable to create " + screenshotAbsolutePath);
+			} catch (Exception ex) {
+				System.err.println("Unable to capture screenshot...");
+				ex.printStackTrace();
 			}
-		} catch (Exception ex) {
-			System.err.println("Unable to capture screenshot...");
-			ex.printStackTrace();
 		}
 	}
 
@@ -95,6 +98,30 @@ public class DriverBase {
 		if (extentReports != null) {
 			extentReports.flush();
 		}
+	}
+
+	/**
+	 * Returns the instance of BasePage.
+	 * 
+	 * @param <T>  - Class Type
+	 * @param type - Class type requires to create new instance.
+	 * @return BasePage instance
+	 */
+	public <T extends BasePage> T getPage(Class<T> type) {
+		T page = null;
+		try {
+
+			page = type.getDeclaredConstructor(WebDriver.class).newInstance(driverThread.get());
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		return page;
 	}
 
 	private boolean createFile(File screenshot) {
