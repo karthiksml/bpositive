@@ -27,7 +27,7 @@ import com.headspin.hackathon.core.reports.ExtentManager;
 import com.headspin.hackathon.core.reports.ListenerThreads;
 
 public class DriverBase {
-	public static ThreadLocal<WebDriver> driverThread = new ThreadLocal<>();
+	private static ThreadLocal<WebDriver> driverThread = new ThreadLocal<>();
 
 	private ExtentReports extentReports;
 
