@@ -34,7 +34,6 @@ public class DriverBase {
 	@BeforeSuite(alwaysRun = true)
 	public void initReports() {
 		extentReports = ExtentManager.getReporter();
-
 	}
 
 	@BeforeClass(alwaysRun = true)
