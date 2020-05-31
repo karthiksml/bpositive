@@ -1,17 +1,23 @@
 package com.headspin.bpositive.test;
 
-import org.openqa.selenium.WebDriver;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.headspin.hackathon.core.setup.DriverBase;
+import com.headspin.hackathon.pages.Home;
 
 public class TestBase extends DriverBase {
 
-	@Test
-	public void googleCheeseExample() throws Exception {
-		
-		WebDriver driver = getDriver();
-		driver.get("http://www.google.com");
+	private Home homePage;
+	private String url = "https://www.makemytrip.com/";
 
+	@BeforeClass
+	public void initPages() {
+		homePage = getPage(Home.class);
+	}
+
+	@Test
+	public void verifyMakeMyTripHomePage() {
+		homePage.loadURL(url);
 	}
 }
