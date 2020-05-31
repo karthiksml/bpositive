@@ -28,7 +28,7 @@ import com.headspin.hackathon.core.reports.ExtentManager;
 import com.headspin.hackathon.core.reports.ListenerThreads;
 
 public class DriverBase {
-	private static ThreadLocal<WebDriver> driverThread = new ThreadLocal<>();
+	private static ThreadLocal<WebDriver> driverThread = new ThreadLocal<WebDriver>();
 
 	private ExtentReports extentReports;
 
@@ -39,7 +39,7 @@ public class DriverBase {
 
 	@BeforeClass(alwaysRun = true)
 	public void initApp() {
-		DriverType driverType = DriverType.FIREFOX;
+		DriverType driverType = DriverType.valueOf(System.getProperty("browser"));
 		WebDriver driver = DriverFactory.getDriver(driverType);
 		driverThread.set(driver);
 		ListenerThreads.setParentTest(extentReports.createTest(this.getClass().getSimpleName()));

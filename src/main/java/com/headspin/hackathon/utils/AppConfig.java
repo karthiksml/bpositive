@@ -12,4 +12,6 @@ public class AppConfig {
 	private boolean capture;
 	private String gridURL;
 	private String appURL;
+	private String username;
+	private String password;
 }
