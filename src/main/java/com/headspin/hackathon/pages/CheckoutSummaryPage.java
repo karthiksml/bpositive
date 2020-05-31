@@ -6,6 +6,7 @@ import org.openqa.selenium.support.FindBy;
 
 import com.headspin.hackathon.core.setup.BasePage;
 import com.headspin.hackathon.utils.DriverUtils;
+import com.headspin.hackathon.utils.HotelSummary;
 
 public class CheckoutSummaryPage extends BasePage {
 	private DriverUtils driverUtils;
@@ -36,18 +37,13 @@ public class CheckoutSummaryPage extends BasePage {
 	@FindBy(css = ".traveler_details.clearfix .contact_info")
 	private WebElement contactinfo;
 
-	public boolean verifysummaryDetails(String hotelName, String checkInDate, String checkOutDate,
-			String roomInformation, String userName) {
-		if (driverUtils.getElementText(hotelNameInfo).toString().equalsIgnoreCase(hotelName)
-				&& driverUtils.getElementText(checkInDateInfo).toString().equalsIgnoreCase(checkInDate)
-				&& driverUtils.getElementText(checkoutDateInfo).toString().equalsIgnoreCase(checkOutDate)
-				&& driverUtils.getElementText(roomInfo).toString().contains(roomInformation)
-				&& driverUtils.getElementText(travellerName).toString().contains(userName)) {
-			return true;
-		} else {
-			return false;
-		}
-
+	public HotelSummary getHotelBookingSummary() {
+		HotelSummary hotelSummary = new HotelSummary();
+		hotelSummary.setHotelName(driverUtils.getElementText(hotelNameInfo));
+		hotelSummary.setRoomName(driverUtils.getElementText(roomInfo));
+		hotelSummary.setCheckInDate(driverUtils.getElementText(checkInDateInfo));
+		hotelSummary.setCheckOutDate(driverUtils.getElementText(checkoutDateInfo));
+		return hotelSummary;
 	}
 
 }

@@ -11,7 +11,6 @@ import com.headspin.hackathon.utils.AppConfig;
 import com.headspin.hackathon.utils.DriverUtils;
 import com.headspin.hackathon.utils.Utils;
 
-
 public class Home extends BasePage {
 
 	private DriverUtils driverUtils;
@@ -33,8 +32,7 @@ public class Home extends BasePage {
 	@FindAll({ @FindBy(id = "username"), @FindBy(xpath = "//input[@id='username']") })
 	WebElement username;
 
-	@FindAll({ @FindBy(xpath = "//button[@class='capText font16']/span[contains(text(), 'Continue')]"),
-			@FindBy(xpath = "//span[contains(text(), 'Continue')]") })
+	@FindBy(xpath = "//div[contains(@class, 'btnContainer') and not(contains(@class, 'disabled'))]/button/span")
 	WebElement continueBtn;
 
 	@FindAll({ @FindBy(id = "password"), @FindBy(xpath = "//input[@id='password']") })
@@ -50,6 +48,7 @@ public class Home extends BasePage {
 	public void login() {
 		driverUtils.clickElement(login);
 		driverUtils.setInput(username, appConfig.getUsername());
+		driverUtils.waitFor(1);
 		driverUtils.clickElement(continueBtn);
 		driverUtils.setInput(password, appConfig.getPassword());
 		driverUtils.clickElement(loginBtn);

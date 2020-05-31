@@ -50,9 +50,9 @@ public class HotelReviewPage extends BasePage{
 		driverUtils.setInput(lastName, lastNameText);
 	}
 	
-	public void enterMobileNum(int mobNo) {
+	public void enterMobileNum(String mobNo) {
 		driverUtils.scrollToElement(mobileNo);
-		driverUtils.setInput(mobileNo, String.valueOf(mobNo));
+		driverUtils.setInput(mobileNo, mobNo);
 	}
 	
 	public void selectOtherOptions() {

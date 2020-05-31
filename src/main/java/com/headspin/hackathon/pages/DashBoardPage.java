@@ -68,6 +68,9 @@ public class DashBoardPage extends BasePage {
 	@FindBy(xpath = "//div[@class='addRoomRow']")
 	List<WebElement> roomCount;
 
+	@FindBy(xpath = "//span[@class='selectedDateField appendBottom8 pointer' and @data-cy='selectCheckOutDate']")
+	WebElement getSelectedCheckOutDate;
+
 	public void enterCityDetails(String city) {
 		driverUtils.clickElement(hotels);
 		driverUtils.clickElement(cityName);
@@ -86,12 +89,13 @@ public class DashBoardPage extends BasePage {
 		WebElement element = driverUtils.findElement(By.xpath(
 				"//div[@class='DayPicker-Day' and contains(text(), " + Integer.parseInt(checkInDate) + 2 + ")]"));
 		driverUtils.clickElement(element);
-		return element.getText();
+		return getSelectedCheckOutDate.getText();
 	}
 
 	public Integer enterRoomGuestsDetails(Integer guests) {
 		driverUtils.clickElement(selectGuests);
-		driverUtils.clickElement(driverUtils.findElement(By.xpath("//ul[@data-cy='adultCount']/li[text()=" + guests + "]")));
+		driverUtils.clickElement(
+				driverUtils.findElement(By.xpath("//ul[@data-cy='adultCount']/li[text()=" + guests + "]")));
 		driverUtils.clickElement(applyBtn);
 		return roomCount.size();
 	}

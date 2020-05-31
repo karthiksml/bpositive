@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
@@ -45,12 +46,19 @@ public class DriverBase {
 
 	@BeforeClass(alwaysRun = true)
 	public void initApp() {
-		DriverType driverType = DriverType.valueOf(System.getProperty("browser"));
+		DriverType driverType = null;
+		String browser = System.getProperty("browser");
+		if (StringUtils.isEmpty(browser)) {
+			driverType = DriverType.CHROME;
+		} else {
+			driverType = DriverType.valueOf(browser.toUpperCase());
+		}
 		WebDriver driver = DriverFactory.getDriver(driverType);
 		if (appConfig.isRecordEvents()) {
 			driver = captureEvents(driver);
 			ListenerThreads.setEvents(new HashMap<String, MediaEntityModelProvider>());
 		}
+		driver.manage().window().maximize();
 		driverThread.set(driver);
 		ListenerThreads.setParentTest(extentReports.createTest(this.getClass().getSimpleName()));
 	}

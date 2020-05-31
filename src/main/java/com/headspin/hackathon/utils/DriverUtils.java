@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -21,7 +22,7 @@ public class DriverUtils {
 	JavascriptExecutor js;
 
 	public DriverUtils(WebDriver driver) {
-		driverWait = new WebDriverWait(driver, 10);
+		driverWait = new WebDriverWait(driver, 3);
 		this.driver = driver;
 		js = (JavascriptExecutor) driver;
 	}
@@ -44,6 +45,7 @@ public class DriverUtils {
 		element.click();
 
 	}
+
 	public String getWindow() {
 		return driver.getWindowHandle();
 	}
@@ -63,14 +65,15 @@ public class DriverUtils {
 		if (value != null)
 			element.sendKeys(value);
 	}
-	
+
 	public void switchToWindow(String parentWindow) {
 		driverWait.until(ExpectedConditions.numberOfWindowsToBe(2));
 		Set<String> windows = driver.getWindowHandles();
-		for(String cuurentWindow : windows)
-			if(!cuurentWindow.equals(parentWindow))
+		for (String cuurentWindow : windows)
+			if (!cuurentWindow.equals(parentWindow))
 				driver.switchTo().window(cuurentWindow);
 	}
+
 	public WebElement findElement(By by) {
 		return driver.findElement(by);
 	}
@@ -83,6 +86,15 @@ public class DriverUtils {
 		} catch (IOException unableToWriteScreenshot) {
 			System.err.println("Unable to write " + screenshot.getAbsolutePath());
 			unableToWriteScreenshot.printStackTrace();
+		}
+	}
+
+	public void waitFor(int durationInSeconds) {
+		try {
+			Thread.sleep(TimeUnit.SECONDS.toMillis(durationInSeconds));
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
