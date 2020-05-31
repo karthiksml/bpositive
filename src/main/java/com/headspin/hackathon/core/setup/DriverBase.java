@@ -1,17 +1,13 @@
 package com.headspin.hackathon.core.setup;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Base64;
+import java.util.HashMap;
 
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.Augmenter;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -24,13 +20,23 @@ import org.testng.annotations.Test;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
+import com.aventstack.extentreports.MediaEntityModelProvider;
+import com.headspin.hackathon.core.listeners.EventHandler;
 import com.headspin.hackathon.core.reports.ExtentManager;
 import com.headspin.hackathon.core.reports.ListenerThreads;
+import com.headspin.hackathon.utils.AppConfig;
+import com.headspin.hackathon.utils.DriverUtils;
+import com.headspin.hackathon.utils.Utils;
 
 public class DriverBase {
 	private static ThreadLocal<WebDriver> driverThread = new ThreadLocal<>();
 
 	private ExtentReports extentReports;
+
+	private static AppConfig appConfig = Utils.readAppConfig();
+
+	private EventFiringWebDriver eventFiringWebDriver = null;
+	private EventHandler handler = null;
 
 	@BeforeSuite(alwaysRun = true)
 	public void initReports() {
@@ -41,8 +47,19 @@ public class DriverBase {
 	public void initApp() {
 		DriverType driverType = DriverType.valueOf(System.getProperty("browser"));
 		WebDriver driver = DriverFactory.getDriver(driverType);
+		if (appConfig.isRecordEvents()) {
+			driver = captureEvents(driver);
+			ListenerThreads.setEvents(new HashMap<String, MediaEntityModelProvider>());
+		}
 		driverThread.set(driver);
 		ListenerThreads.setParentTest(extentReports.createTest(this.getClass().getSimpleName()));
+	}
+
+	private WebDriver captureEvents(WebDriver driver) {
+		eventFiringWebDriver = new EventFiringWebDriver(driver);
+		EventHandler handler = new EventHandler();
+		eventFiringWebDriver.register(handler);
+		return ((WebDriver) eventFiringWebDriver);
 	}
 
 	@BeforeMethod(alwaysRun = true)
@@ -66,16 +83,14 @@ public class DriverBase {
 				String screenshotAbsolutePath = screenshotDirectory + File.separator + System.currentTimeMillis() + "_"
 						+ failingTest.getName() + ".png";
 				File screenshot = new File(screenshotAbsolutePath);
-				if (createFile(screenshot)) {
+				if (Utils.createFile(screenshot)) {
 					try {
-						writeScreenshotToFile(driver, screenshot);
+						DriverUtils.writeScreenshotToFile(driver, screenshot);
 					} catch (ClassCastException weNeedToAugmentOurDriverObject) {
-						writeScreenshotToFile(new Augmenter().augment(driver), screenshot);
+						DriverUtils.writeScreenshotToFile(new Augmenter().augment(driver), screenshot);
 					}
-					byte[] failedAt = Base64.getEncoder().encode(FileUtils.readFileToByteArray(screenshot));
-					String base64String = new String(failedAt);
-					ListenerThreads.getChildTest().fail("<b>Screenshot</b><br> ",
-							MediaEntityBuilder.createScreenCaptureFromBase64String(base64String).build());
+					ListenerThreads.getChildTest().fail("<b>Screenshot</b><br> ", MediaEntityBuilder
+							.createScreenCaptureFromBase64String(Utils.getBase64EncodedString(screenshot)).build());
 				} else {
 					System.err.println("Unable to create " + screenshotAbsolutePath);
 				}
@@ -88,8 +103,12 @@ public class DriverBase {
 
 	@AfterClass(alwaysRun = true)
 	public void closeApp() {
+
 		if (driverThread.get() != null) {
 			driverThread.get().quit();
+		}
+		if (eventFiringWebDriver != null) {
+			eventFiringWebDriver.unregister(handler);
 		}
 	}
 
@@ -124,33 +143,4 @@ public class DriverBase {
 		return page;
 	}
 
-	private boolean createFile(File screenshot) {
-		boolean fileCreated = false;
-
-		if (screenshot.exists()) {
-			fileCreated = true;
-		} else {
-			File parentDirectory = new File(screenshot.getParent());
-			if (parentDirectory.exists() || parentDirectory.mkdirs()) {
-				try {
-					fileCreated = screenshot.createNewFile();
-				} catch (IOException errorCreatingScreenshot) {
-					errorCreatingScreenshot.printStackTrace();
-				}
-			}
-		}
-
-		return fileCreated;
-	}
-
-	private void writeScreenshotToFile(WebDriver driver, File screenshot) {
-		try {
-			FileOutputStream screenshotStream = new FileOutputStream(screenshot);
-			screenshotStream.write(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES));
-			screenshotStream.close();
-		} catch (IOException unableToWriteScreenshot) {
-			System.err.println("Unable to write " + screenshot.getAbsolutePath());
-			unableToWriteScreenshot.printStackTrace();
-		}
-	}
 }
