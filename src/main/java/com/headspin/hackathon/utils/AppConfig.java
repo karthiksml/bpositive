@@ -13,4 +13,6 @@ public class AppConfig {
 	private String gridURL;
 	private String appURL;
 	private boolean recordEvents;
+	private String username;
+	private String password;
 }

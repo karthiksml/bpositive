@@ -29,7 +29,7 @@ import com.headspin.hackathon.utils.DriverUtils;
 import com.headspin.hackathon.utils.Utils;
 
 public class DriverBase {
-	private static ThreadLocal<WebDriver> driverThread = new ThreadLocal<>();
+	private static ThreadLocal<WebDriver> driverThread = new ThreadLocal<WebDriver>();
 
 	private ExtentReports extentReports;
 
@@ -45,7 +45,7 @@ public class DriverBase {
 
 	@BeforeClass(alwaysRun = true)
 	public void initApp() {
-		DriverType driverType = DriverType.CHROME;
+		DriverType driverType = DriverType.valueOf(System.getProperty("browser"));
 		WebDriver driver = DriverFactory.getDriver(driverType);
 		if (appConfig.isRecordEvents()) {
 			driver = captureEvents(driver);
