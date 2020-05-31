@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.Set;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -19,10 +20,12 @@ public class DriverUtils {
 
 	private WebDriverWait driverWait = null;
 	private WebDriver driver = null;
+	JavascriptExecutor js;
 
 	public DriverUtils(WebDriver driver) {
 		driverWait = new WebDriverWait(driver, 10);
 		this.driver = driver;
+		js = (JavascriptExecutor) driver;
 	}
 
 	public void loadURL(String url) {
@@ -44,11 +47,23 @@ public class DriverUtils {
 
 	}
 	
+
 	public String getWindow() {
 		return driver.getWindowHandle();
 	}
 
-	public void setInput(WebElement element, String value) {
+	
+	public void scrollToElement(WebElement element) {
+		js.executeScript("arguments[0].scrollIntoView(true);", element);
+	}
+	
+	public String getElementText(WebElement element) {
+		waitForElementToDisplay(element);
+		return element.getText().toString();
+	}
+	
+	
+	public  void setInput(WebElement element, String value) {
 		waitForElementToDisplay(element);
 		element.clear();
 		if (value != null)
