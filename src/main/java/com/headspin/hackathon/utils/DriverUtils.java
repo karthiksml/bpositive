@@ -2,6 +2,7 @@ package com.headspin.hackathon.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Set;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -17,7 +18,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 public class DriverUtils {
 
-	private  WebDriverWait driverWait = null;
+	private WebDriverWait driverWait = null;
 	private WebDriver driver = null;
 	JavascriptExecutor js;
 
@@ -39,12 +40,18 @@ public class DriverUtils {
 		driverWait.until(ExpectedConditions.elementToBeClickable(element));
 	}
 
-	public  void clickElement(WebElement element) {
+	public void clickElement(WebElement element) {
 		waitForElementToDisplay(element);
 		waitForElementToEnable(element);
 		element.click();
 
 	}
+	
+
+	public String getWindow() {
+		return driver.getWindowHandle();
+	}
+
 	
 	public void scrollToElement(WebElement element) {
 		js.executeScript("arguments[0].scrollIntoView(true);", element);
@@ -55,14 +62,22 @@ public class DriverUtils {
 		return element.getText().toString();
 	}
 	
+	
 	public  void setInput(WebElement element, String value) {
 		waitForElementToDisplay(element);
 		element.clear();
-		if(value !=null)
+		if (value != null)
 			element.sendKeys(value);
-
 	}
 	
+	public void switchToWindow(String parentWindow) {
+		driverWait.until(ExpectedConditions.numberOfWindowsToBe(2));
+		Set<String> windows = driver.getWindowHandles();
+		for(String cuurentWindow : windows)
+			if(!cuurentWindow.equals(parentWindow))
+				driver.switchTo().window(cuurentWindow);
+	}
+
 	public WebElement findElement(By by) {
 		return driver.findElement(by);
 	}
