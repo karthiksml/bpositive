@@ -3,11 +3,12 @@ package com.headspin.hackathon.utils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Set;
 
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -43,6 +44,9 @@ public class DriverUtils {
 		element.click();
 
 	}
+	public String getWindow() {
+		return driver.getWindowHandle();
+	}
 
 	public void scrollToElement(WebElement element) {
 		js.executeScript("arguments[0].scrollIntoView(true);", element);
@@ -58,9 +62,15 @@ public class DriverUtils {
 		element.clear();
 		if (value != null)
 			element.sendKeys(value);
-
 	}
-
+	
+	public void switchToWindow(String parentWindow) {
+		driverWait.until(ExpectedConditions.numberOfWindowsToBe(2));
+		Set<String> windows = driver.getWindowHandles();
+		for(String cuurentWindow : windows)
+			if(!cuurentWindow.equals(parentWindow))
+				driver.switchTo().window(cuurentWindow);
+	}
 	public WebElement findElement(By by) {
 		return driver.findElement(by);
 	}

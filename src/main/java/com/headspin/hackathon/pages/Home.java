@@ -5,6 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindAll;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+
 import com.headspin.hackathon.core.setup.BasePage;
 import com.headspin.hackathon.utils.AppConfig;
 import com.headspin.hackathon.utils.DriverUtils;
@@ -12,7 +13,6 @@ import com.headspin.hackathon.utils.Utils;
 
 
 public class Home extends BasePage {
-	
 
 	private DriverUtils driverUtils;
 	private AppConfig appConfig = Utils.readAppConfig();
@@ -26,8 +26,6 @@ public class Home extends BasePage {
 	public void loadHomePage() {
 		driverUtils.loadURL(appConfig.getAppURL());
 	}
-	
-
 
 	@FindBy(xpath = "//p[contains(., 'Login')]")
 	private WebElement login;

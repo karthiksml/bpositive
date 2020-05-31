@@ -29,7 +29,7 @@ import com.headspin.hackathon.utils.DriverUtils;
 import com.headspin.hackathon.utils.Utils;
 
 public class DriverBase {
-	private static ThreadLocal<WebDriver> driverThread = new ThreadLocal<WebDriver>();
+	private static ThreadLocal<WebDriver> driverThread = new ThreadLocal<>();
 
 	private ExtentReports extentReports;
 
