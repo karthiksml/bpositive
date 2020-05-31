@@ -32,15 +32,22 @@ public class RoomsPage extends BasePage {
 
 	@FindBy(xpath = "(//div[@class='roomWrap']//span[@class='bxNegotiate appendBottom5'])[1]")
 	WebElement roomFare;
-	
+
 	@FindBy(id = "detpg_hotel_name")
 	WebElement hotelName;
-	
 
 	public void switchToHotelRooms(String parentWindow) {
 		driverUtils.switchToWindow(parentWindow);
 	}
-	
+
+	public String getRoomName() {
+		return roomType.getText();
+	}
+
+	public String getRoomFare() {
+		return roomFare.getText();
+	}
+
 	public void selectRoom() {
 		driverUtils.clickElement(selectRoom);
 	}
