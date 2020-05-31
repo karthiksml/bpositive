@@ -31,12 +31,12 @@ public class HotelListingPage extends BasePage {
 	private WebElement hotelName;
 
 	public void moveSliderBy(int p) {
-
+		driverUtils.scrollToElement(priceSliderMin);
 		action.dragAndDropBy(priceSliderMin, 8, 0).build().perform();
 	}
 
 	public void selectUserRating() {
-
+		driverUtils.scrollToElement(veryGoodUserratingCheckbox);
 		driverUtils.clickElement(veryGoodUserratingCheckbox);
 	}
 

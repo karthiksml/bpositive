@@ -20,9 +20,7 @@ public class TestBase extends DriverBase {
 	private final static String OCULAR_RESULTS = "src/test/resources/blog/results";
 	
 	private Home homePage;
-	private HotelListingPage hotelListingPage;
-	private String url = "https://www.makemytrip.com/";
-	
+
 
 	private static void setVisualValidationConfig() {
 	    Path ocularSnapshotsPath = Paths.get(".", OCULAR_SNAPSHOTS);
@@ -44,21 +42,14 @@ public class TestBase extends DriverBase {
 	
 	}
 	
-	
-
-		
-
 	@BeforeClass
 	public void initPages() {
+		setVisualValidationConfig();
 		homePage = getPage(Home.class);
-		hotelListingPage = getPage(HotelListingPage.class);
 	}
 
 	@Test
 	public void verifyMakeMyTripHomePage() throws InterruptedException {
-		homePage.loadHomePage(url);
-		hotelListingPage.moveSliderBy(1000);
-	
-	
+		homePage.loadHomePage();
 	}
 }
