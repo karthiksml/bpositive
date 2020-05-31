@@ -14,7 +14,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.headspin.hackathon.utils.AppConfig;
-import com.headspin.hackathon.utils.DriverUtils;
+import com.headspin.hackathon.utils.Utils;
 
 import io.github.bonigarcia.wdm.DriverManagerType;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -50,7 +50,7 @@ public class DriverFactory {
 
 	private static final Supplier<WebDriver> remoteDriverSupplier = new Supplier<WebDriver>() {
 		public WebDriver get() {
-			AppConfig config = DriverUtils.readAppConfig();
+			AppConfig config = Utils.readAppConfig();
 			DesiredCapabilities caps = DesiredCapabilities.chrome();
 			caps.setCapability("browserVersion", config.getBrowserVersion());
 			caps.setCapability("browserName", config.getBrowserName());

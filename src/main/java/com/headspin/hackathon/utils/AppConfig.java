@@ -12,4 +12,5 @@ public class AppConfig {
 	private boolean capture;
 	private String gridURL;
 	private String appURL;
+	private boolean recordEvents;
 }
