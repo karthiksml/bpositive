@@ -1,0 +1,11 @@
+# Mongo instance info for Klov Reporter
+reportEnabled: true
+host: localhost
+port: 27017
+serverURL: http://localhost:8082
+
+# Name of the Automation Project 
+projectName: HeadSpin
+
+# Name of the Automation Report
+reportName: Hackathon

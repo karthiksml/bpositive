@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-
 import com.headspin.hackathon.core.setup.DriverBase;
 import com.headspin.hackathon.pages.Home;
 import com.headspin.hackathon.pages.HotelListingPage;
@@ -57,7 +56,7 @@ public class TestBase extends DriverBase {
 
 	@Test
 	public void verifyMakeMyTripHomePage() throws InterruptedException {
-		homePage.loadURL(url);
+		homePage.loadHomePage(url);
 		hotelListingPage.moveSliderBy(1000);
 	
 	
