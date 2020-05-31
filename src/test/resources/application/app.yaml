@@ -1,0 +1,16 @@
+# GRID Configuration
+browserVersion: 76.0.3809.100
+browserName: chrome
+capture: true
+gridURL: https://dev-us-pao-0.headspin.io:9092/v0/666ef1c13b974b14bfe62f8777184ae2/wd/hub
+
+#Capture Events
+recordEvents: false
+
+# Application Data
+appURL: https://www.makemytrip.com/
+username: dummyuser_bpositive@gmail.com
+password: DummyUser@123
+firstName: AutomationUser
+lastName: Test 
+phone: 9999999999
