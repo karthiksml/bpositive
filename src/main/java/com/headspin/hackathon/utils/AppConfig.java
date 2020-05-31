@@ -11,4 +11,5 @@ public class AppConfig {
 	private String browserName;
 	private boolean capture;
 	private String gridURL;
+	private String appURL;
 }

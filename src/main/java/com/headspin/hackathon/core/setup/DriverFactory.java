@@ -1,7 +1,5 @@
 package com.headspin.hackathon.core.setup;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -15,11 +13,8 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.headspin.hackathon.utils.AppConfig;
+import com.headspin.hackathon.utils.DriverUtils;
 
 import io.github.bonigarcia.wdm.DriverManagerType;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -55,7 +50,7 @@ public class DriverFactory {
 
 	private static final Supplier<WebDriver> remoteDriverSupplier = new Supplier<WebDriver>() {
 		public WebDriver get() {
-			AppConfig config = readAppConfig();
+			AppConfig config = DriverUtils.readAppConfig();
 			DesiredCapabilities caps = DesiredCapabilities.chrome();
 			caps.setCapability("browserVersion", config.getBrowserVersion());
 			caps.setCapability("browserName", config.getBrowserName());
@@ -71,22 +66,6 @@ public class DriverFactory {
 			return null;
 		}
 	};
-
-	private static AppConfig readAppConfig() {
-		AppConfig appConfig = null;
-		try {
-			ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-			InputStream envFile = AppConfig.class.getResourceAsStream("/application/app.yaml");
-			appConfig = mapper.readValue(envFile, AppConfig.class);
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return appConfig;
-	}
 
 	static {
 		driverMap.put(DriverType.CHROME, chromeDriverSupplier);
