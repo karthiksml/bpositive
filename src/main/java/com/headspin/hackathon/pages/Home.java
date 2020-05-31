@@ -10,6 +10,7 @@ import com.headspin.hackathon.core.setup.BasePage;
 import com.headspin.hackathon.utils.AppConfig;
 import com.headspin.hackathon.utils.DriverUtils;
 
+
 public class Home extends BasePage {
 
 	private DriverUtils driverUtils;
@@ -21,16 +22,12 @@ public class Home extends BasePage {
 		driverUtils = new DriverUtils(driver);
 	}
 
-	public void loadHomePage(String url) {
-		driverUtils.loadURL(url);
-	}
-
 	public void loadHomePage() {
 		driverUtils.loadURL(appConfig.getAppURL());
 	}
 
-	@FindBy(xpath = "//p[contains(., \"Login\")]")
-	WebElement login;
+	@FindBy(xpath = "//p[contains(., 'Login')]")
+	private WebElement login;
 
 	@FindAll({ @FindBy(id = "username"), @FindBy(xpath = "//input[@id='username']") })
 	WebElement username;
@@ -49,17 +46,13 @@ public class Home extends BasePage {
 	@FindBy(xpath = "//div[@class='modalClose pushRight']/span")
 	WebElement modalClose;
 
-	@FindAll({
-			@FindBy(xpath = "//a[@href='https://www.makemytrip.com/hotels/' and @class=' makeFlex hrtlCenter column']"),
-			@FindBy(partialLinkText = "hotels") })
-	WebElement hotels;
-
-	@FindAll({ @FindBy(id = "city"), @FindBy(xpath = "//input[@id='city' and @type='text']") })
-	WebElement cityName;
-	
-	@FindBy(xpath = "//input[@placeholder='Enter city/ Hotel/ Area/ Building' and @type='text']")
-	WebElement enteCityName;
-	
-	
+	public void login() {
+		driverUtils.clickElement(login);
+		driverUtils.setInput(username, appConfig.getUsername());
+		driverUtils.clickElement(continueBtn);
+		driverUtils.setInput(password, appConfig.getPassword());
+		driverUtils.clickElement(loginBtn);
+		driverUtils.clickElement(modalClose);
+	}
 
 }

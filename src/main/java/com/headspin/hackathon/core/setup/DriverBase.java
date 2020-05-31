@@ -39,7 +39,7 @@ public class DriverBase {
 
 	@BeforeClass(alwaysRun = true)
 	public void initApp() {
-		DriverType driverType = DriverType.FIREFOX;
+		DriverType driverType = DriverType.valueOf(System.getProperty("browser"));
 		WebDriver driver = DriverFactory.getDriver(driverType);
 		driverThread.set(driver);
 		ListenerThreads.setParentTest(extentReports.createTest(this.getClass().getSimpleName()));
