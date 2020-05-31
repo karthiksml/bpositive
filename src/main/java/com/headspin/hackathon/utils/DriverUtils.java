@@ -1,8 +1,11 @@
 package com.headspin.hackathon.utils;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -10,14 +13,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-
 public class DriverUtils {
 
-	private  WebDriverWait driverWait = null;
+	private WebDriverWait driverWait = null;
 	private WebDriver driver = null;
 	JavascriptExecutor js;
 
@@ -39,48 +37,43 @@ public class DriverUtils {
 		driverWait.until(ExpectedConditions.elementToBeClickable(element));
 	}
 
-	public  void clickElement(WebElement element) {
+	public void clickElement(WebElement element) {
 		waitForElementToDisplay(element);
 		waitForElementToEnable(element);
 		element.click();
 
 	}
-	
+
 	public void scrollToElement(WebElement element) {
 		js.executeScript("arguments[0].scrollIntoView(true);", element);
 	}
-	
+
 	public String getElementText(WebElement element) {
 		waitForElementToDisplay(element);
 		return element.getText().toString();
 	}
-	
-	public  void setInput(WebElement element, String value) {
+
+	public void setInput(WebElement element, String value) {
 		waitForElementToDisplay(element);
 		element.clear();
-		if(value !=null)
+		if (value != null)
 			element.sendKeys(value);
 
 	}
-	
+
 	public WebElement findElement(By by) {
 		return driver.findElement(by);
 	}
 
-	public static AppConfig readAppConfig() {
-		AppConfig appConfig = null;
+	public static void writeScreenshotToFile(WebDriver driver, File screenshot) {
 		try {
-			ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-			InputStream envFile = AppConfig.class.getResourceAsStream("/application/app.yaml");
-			appConfig = mapper.readValue(envFile, AppConfig.class);
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+			FileOutputStream screenshotStream = new FileOutputStream(screenshot);
+			screenshotStream.write(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES));
+			screenshotStream.close();
+		} catch (IOException unableToWriteScreenshot) {
+			System.err.println("Unable to write " + screenshot.getAbsolutePath());
+			unableToWriteScreenshot.printStackTrace();
 		}
-		return appConfig;
 	}
 
 }
