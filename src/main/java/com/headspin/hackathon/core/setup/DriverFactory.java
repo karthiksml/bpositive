@@ -9,9 +9,7 @@ import java.util.function.Supplier;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -22,14 +20,13 @@ public class DriverFactory {
 
 	private static final Map<DriverType, Supplier<WebDriver>> driverMap = new HashMap<DriverType, Supplier<WebDriver>>();
 
-	public WebDriver getDriver(DriverType driverType) {
+	public static WebDriver getDriver(DriverType driverType) {
 		return driverMap.get(driverType).get();
 	}
 
 	private static final Supplier<WebDriver> ffDriverSupplier = new Supplier<WebDriver>() {
 		public WebDriver get() {
 			WebDriverManager.getInstance(DriverManagerType.FIREFOX).setup();
-			
 			return new FirefoxDriver();
 		}
 	};
@@ -65,13 +62,11 @@ public class DriverFactory {
 	};
 	
 	
-
 	static {
 		driverMap.put(DriverType.CHROME, chromeDriverSupplier);
 		driverMap.put(DriverType.FIREFOX, ffDriverSupplier);
 		driverMap.put(DriverType.IE, ieDriverSupplier);
 		driverMap.put(DriverType.HEADSPIN, remoteDriverSupplier);
-		
 	}
 
 }
