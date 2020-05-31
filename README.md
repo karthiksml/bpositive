@@ -28,10 +28,9 @@ This Framework is created using Java + Selenium Web Driver + TestNG which can be
 
 # Reporting:
 This framework generates html reports which will be stored under ExtentReports folder. We can also enable the live report dashboard with the following configuration:
-> Download Klov jar from [GitHub](https://github.com/extent-framework/klov-server)
-> run jar as java -jar klov-version.jar
-> Install and run the mongo server [Guide](https://docs.mongodb.com/guides/server/install/)
+`Download Klov jar from` [GitHub](https://github.com/extent-framework/klov-server)
+` run jar as java -jar klov-version.jar`
+` Install and run the mongo server` [Guide](https://docs.mongodb.com/guides/server/install/)
 > configure the params (Mongo Host, Port, KLOV Server URL) and reportEnabled as true report.yaml
-
-Now run the suite and hit the Klov server URL to see the status of current execution. 
+> Now run the suite and hit the Klov server URL to see the status of current execution. 
 Example: http://localhost:8082/build/list (If you are runing in local)
