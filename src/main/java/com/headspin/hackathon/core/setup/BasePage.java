@@ -10,7 +10,5 @@ public class BasePage {
 		this.driver = driver;
 	}
 
-	public void loadURL(String url) {
-		driver.get(url);
-	}
+	
 }
