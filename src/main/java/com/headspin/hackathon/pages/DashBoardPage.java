@@ -92,12 +92,8 @@ public class DashBoardPage extends BasePage {
 	public Integer enterRoomGuestsDetails(Integer guests) {
 		driverUtils.clickElement(selectGuests);
 		driverUtils.clickElement(driverUtils.findElement(By.xpath("//ul[@data-cy='adultCount']/li[text()=" + guests + "]")));
-		return roomCount.size();
-	}
-
-	public void enterguestsDetails() {
-		driverUtils.clickElement(selectGuests);
 		driverUtils.clickElement(applyBtn);
+		return roomCount.size();
 	}
 
 	public void enterTravellingFor() {
