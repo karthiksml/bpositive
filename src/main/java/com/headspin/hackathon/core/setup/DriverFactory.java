@@ -13,6 +13,9 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+import com.headspin.hackathon.utils.AppConfig;
+import com.headspin.hackathon.utils.DriverUtils;
+
 import io.github.bonigarcia.wdm.DriverManagerType;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -44,24 +47,26 @@ public class DriverFactory {
 			return new InternetExplorerDriver();
 		}
 	};
-	
+
 	private static final Supplier<WebDriver> remoteDriverSupplier = new Supplier<WebDriver>() {
 		public WebDriver get() {
+			AppConfig config = DriverUtils.readAppConfig();
 			DesiredCapabilities caps = DesiredCapabilities.chrome();
-	        caps.setCapability("browserVersion", "76.0.3809.100");
-	        caps.setCapability("browserName", "chrome");
-	        caps.setCapability("headspin:capture", true);
+			caps.setCapability("browserVersion", config.getBrowserVersion());
+			caps.setCapability("browserName", config.getBrowserName());
+			if (config.isCapture()) {
+				caps.setCapability("headspin:capture", true);
+			}
 
-	        try {
-				return new RemoteWebDriver(new URL("https://dev-us-pao-0.headspin.io:9092/v0/666ef1c13b974b14bfe62f8777184ae2/wd/hub"), caps);
+			try {
+				return new RemoteWebDriver(new URL(config.getGridURL()), caps);
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
 			return null;
 		}
 	};
-	
-	
+
 	static {
 		driverMap.put(DriverType.CHROME, chromeDriverSupplier);
 		driverMap.put(DriverType.FIREFOX, ffDriverSupplier);

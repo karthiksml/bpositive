@@ -18,6 +18,6 @@ public class TestBase extends DriverBase {
 
 	@Test
 	public void verifyMakeMyTripHomePage() {
-		homePage.loadURL(url);
+		homePage.loadHomePage(url);
 	}
 }
