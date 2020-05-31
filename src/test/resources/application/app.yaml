@@ -11,3 +11,6 @@ recordEvents: false
 appURL: https://www.makemytrip.com/
 username: dummyuser_bpositive@gmail.com
 password: DummyUser@123
+firstName: AutomationUser
+lastName: Test 
+phone: 9999999999
