@@ -15,4 +15,7 @@ public class AppConfig {
 	private boolean recordEvents;
 	private String username;
 	private String password;
+	private String firstName;
+	private String lastName;
+	private String phone;
 }
