@@ -32,7 +32,7 @@ public class Home extends BasePage {
 	@FindAll({ @FindBy(id = "username"), @FindBy(xpath = "//input[@id='username']") })
 	WebElement username;
 
-	@FindBy(xpath = "//div[contains(@class, 'btnContainer') and not(contains(@class, 'disabled'))]/button/span")
+	@FindBy(xpath = "//span[contains(text(), 'Continue')]")
 	WebElement continueBtn;
 
 	@FindAll({ @FindBy(id = "password"), @FindBy(xpath = "//input[@id='password']") })
@@ -48,7 +48,7 @@ public class Home extends BasePage {
 	public void login() {
 		driverUtils.clickElement(login);
 		driverUtils.setInput(username, appConfig.getUsername());
-		driverUtils.waitFor(1);
+		driverUtils.clickElement(continueBtn);
 		driverUtils.clickElement(continueBtn);
 		driverUtils.setInput(password, appConfig.getPassword());
 		driverUtils.clickElement(loginBtn);

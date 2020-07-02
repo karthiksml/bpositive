@@ -54,7 +54,7 @@ public class DashBoardPage extends BasePage {
 	@FindBy(xpath = "//button[@type='button' and text()='APPLY']")
 	WebElement applyBtn;
 
-	@FindAll({ @FindBy(id = "travelFor"), @FindBy(xpath = "//input[@id='travelFor']' and @type='text']") })
+	@FindBy(xpath = "//span[contains(text(), 'Travelling For')])")
 	WebElement travelFor;
 
 	@FindAll({ @FindBy(xpath = "//li[contains(text(), 'Work')]"),
@@ -79,17 +79,17 @@ public class DashBoardPage extends BasePage {
 	}
 
 	public String checkInDetails() {
-		driverUtils.clickElement(checkIn);
-		driverUtils.clickElement(selectedCheckInDate);
 		checkInDate = selectedCheckInDate.getText();
+		driverUtils.clickElement(selectedCheckInDate);
 		return getSelectedCheckInDate.getText();
 	}
 
 	public String checkOutDetails() {
 		WebElement element = driverUtils.findElement(By.xpath(
 				"//div[@class='DayPicker-Day' and contains(text(), " + Integer.parseInt(checkInDate) + 2 + ")]"));
+		String value = element.getText();
 		driverUtils.clickElement(element);
-		return getSelectedCheckOutDate.getText();
+		return value;
 	}
 
 	public Integer enterRoomGuestsDetails(Integer guests) {
